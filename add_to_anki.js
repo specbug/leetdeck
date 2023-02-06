@@ -56,7 +56,7 @@ var addToAnki = function() {
                 back += payload.typed_code;
                 console.log("Back:\n", back);
               };
-              invoke('createDeck', 6, {
+              invoke('addNote', 6, {
                 "note": {
                   "deckName": "One Deck To Rule Them All",
                   "modelName": "Basic",
