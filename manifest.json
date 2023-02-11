@@ -6,6 +6,16 @@
   "permissions": [
     "activeTab"
   ],
+  "content_scripts": [
+    {
+      "js": [
+        "popup.js"
+      ],
+       "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
   "host_permissions": [
     "http://localhost/"
   ],
