@@ -4,16 +4,17 @@
   "version": "0.1",
   "description": "Leetcode 2 Anki extension.",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "tabs",
+    "declarativeNetRequest",
+    "webRequest",
+    "webRequestBlocking"
   ],
   "content_scripts": [
     {
-      "js": [
-        "popup.js"
-      ],
-       "matches": [
-        "<all_urls>"
-      ]
+      "js": ["popup.js"],
+      "matches": ["http://*/*", "https://*/*"],
+      "run_at": "document_end"
     }
   ],
   "host_permissions": [
