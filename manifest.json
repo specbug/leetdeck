@@ -1,0 +1,18 @@
+{
+  "manifest_version": 1,
+  "name": "leak",
+  "version": "0.1",
+  "description": "Leetcode 2 Anki extension.",
+  "permissions": [
+    "activeTab",
+    "http://127.0.0.1:8765"
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  }
+}
