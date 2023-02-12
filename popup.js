@@ -1,73 +1,79 @@
-async function fetchGraphQLData(query, variables) {
-  const response = await fetch('https://leetcode.com/graphql/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
-  return await response.json();
+async function fetchGraphQLData(query, variables={}) {
+    console.log('[leak] fetching lc details for query', query, 'with variables', variables)
+    const response = await fetch('https://leetcode.com/graphql/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          query,
+          variables,
+        }),
+    });
+    let res = await response.json();
+    console.log('query', query, 'responded with', res.data);
+    return res.data;
 }
 
 
 
 const observer = new MutationObserver(function(mutations) {
-  const para = 'P';
-  const codeblock = 'PRE';
-  const styling = {
-      "code": "font-family: Jetbrains Mono, monospace; white-space: pre; background-color: #f6f8fa; padding: 10px; border-radius: 4px; overflow-x: auto;",
-      "text": "white-space: pre-wrap;"
-  };
-  mutations.forEach(function(mutation) {
-    const buttons = document.querySelectorAll('button');
-    if (buttons.length) {
-      observer.disconnect();
-      buttons.forEach(function(button) {
-        if (button.innerText == 'Submit') {
-            console.log('adding event to button', button.innerText);
-            button.addEventListener('click', function() {
-              console.log('[leak] Submit button clicked!');
-              var front = '<div>';
-              var back = '<code style="font-family: Jetbrains Mono, monospace; white-space: pre; background-color: #f6f8fa; padding: 10px; border-radius: 4px; overflow-x: auto;">';
-              // Code to create flashcard in Anki
-              console.log("[leak] flashcard creation triggered");
-              const paragraphs = document.querySelector('._1l1MA').childNodes;
-              for (const p of paragraphs) {
-                  if (p.tagName === para) {
-                    front += '<p style="white-space: pre-wrap;">'
-                  }
-                  else if (p.tagName === codeblock) {
-                    front += '<pre style="font-family: Jetbrains Mono, monospace; white-space: pre; background-color: #f6f8fa; padding: 10px; border-radius: 4px; overflow-x: auto;">'
-                  }
-                  front += p.textContent;
-                  if (p.tagName === para) {
-                    front += '</p>'
-                  }
-                  else if (p.tagName === codeblock) {
-                    front += '</pre>'
-                  }
-              }
-              front += '</div>'
-              console.log('[leak] front\n', front);
-              // Use the Monaco editor's API to retrieve the complete text content
-              var editor = monaco.editor.getModels()[0];
-              back += editor.getValue();
-              back += '</code>';
-              console.log('[leak] back\n', back);
-              // format
-              // front = front.replace(/\n(\s*)/g, '<br />');
-              // back = back.replace(/\n(\s*)/g, '<br />');
-              // send a message to the background script
-              chrome.runtime.sendMessage({ type: 'submit-button-clicked' , payload: {"front": front, "back": back}});
-        });
-        }
-      });
-    }
-  });
+    mutations.forEach(function(mutation) {
+        const buttons = document.querySelectorAll('button');
+        if (buttons.length) {
+          observer.disconnect();
+          buttons.forEach(function(button) {
+            if (button.innerText == 'Submit') {
+                console.log('adding event to button', button.innerText);
+                button.addEventListener('click', function() {
+                    console.log("[leak] flashcard creation triggered");
+                    let front = '';
+                    let back = '<br /><br /><code style="font-family: Jetbrains Mono, monospace; white-space: pre; background-color: #f6f8fa; padding: 10px; border-radius: 4px; overflow-x: auto;">';
+
+                    // fetch slug
+                    const url = window.location.href;
+                    const slug = url.match(/\/problems\/(.*?)\//)[1];
+                    console.log('[leak] slug:', slug)
+                    let v = {titleSlug: slug};
+                    let desc_coro = fetchGraphQLData('\n    query questionContent($titleSlug: String!) {\n  question(titleSlug: $titleSlug) {\n    content\n  }\n}\n    ', v)
+                    let lang = document.querySelector('.monaco-editor').parentElement.attributes['data-mode-id'].value;
+                    let lid_coro = fetchGraphQLData('\n    query languageList {\n  languageList {\n    id\n    name\n  }\n}\n    ')
+                    let qid_coro = fetchGraphQLData('\n    query questionTitle($titleSlug: String!) {\n  question(titleSlug: $titleSlug) {\n    questionId\n  }\n}\n    ', v)
+                    Promise.all([lid_coro, qid_coro])
+                        .then(([l_data, q_data]) => {
+                            // language ID
+                            let languageId = null;
+                            let languages = l_data.languageList;
+                            for (const l of languages) {
+                                if (l.name === lang) {
+                                    languageId = l.id;
+                                    break
+                                }
+                            }
+                            // question ID
+                            let questionId = parseInt(q_data.question.questionId);
+                            let code_coro = fetchGraphQLData('\n    query syncedCode($questionId: Int!, $lang: Int!) {\n  syncedCode(questionId: $questionId, lang: $lang) {\n    code\n  }\n}\n    ', {"lang": languageId, "questionId": questionId})
+                            Promise.all([desc_coro, code_coro])
+                                .then(([desc_data, code_data]) => {
+                                    front += desc_data.question.content;
+                                    back += code_data.syncedCode.code;
+                                    back += '</code>'
+                                    console.log('[leak] front\n', front);
+                                    console.log('[leak] back\n', back);
+                                    // send a message to the background script
+                                    chrome.runtime.sendMessage({ type: 'submit-button-clicked' , payload: {"front": front, "back": back}});
+                                })
+                                .catch((error) => {
+                                    console.error(error);
+                                });
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                });
+            }});
+        }});
 });
 
 observer.observe(document.body, {
