@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "leak",
-  "version": "0.2",
+  "version": "1.0",
   "description": "Leetcode 2 Anki extension.",
   "permissions": [
     "activeTab",
