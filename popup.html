@@ -1,14 +1,72 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <style>
+      body {
+        background-color: white;
+        font-family: "Warnock Pro", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+        color: black;
+        width: 300px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .title-bar {
+        background-color: #ff796c;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+      }
+
+      .title-bar h1 {
+        margin: 0;
+        color: white;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .content {
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .content p {
+        font-size: 18px;
+        margin-bottom: 20px;
+      }
+
+      .content a {
+        text-decoration: none;
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      img {
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
-    <div>
-      Convert LC problem to Anki
+    <div class="title-bar">
+      <a href="https://github.com/specbug/leak" target="_blank"><h1>leak</h1></a>
+      <small style="color: ghostwhite; opacity: 90%;">Leetcode 2 Anki</small>
     </div>
-    <button id="submitButton">Submit</button>
-    <button id="cancelButton">Cancel</button>
-    <script src="popup.js"></script>
+    <div class="content">
+      <p>Aced an LC problem? Don't forget it, just hit <strong>Submit</strong> to convert it to an Anki flashcard!</p>
+      <a href="https://github.com/specbug/leak" target="_blank">
+        <img height="32" width="32" src="./github-mark.svg" alt="Github">
+      </a>
+    </div>
   </body>
 </html>
