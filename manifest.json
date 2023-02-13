@@ -7,8 +7,7 @@
     "activeTab",
     "tabs",
     "declarativeNetRequest",
-    "webRequest",
-    "webRequestBlocking"
+    "webRequest"
   ],
   "content_scripts": [{
     "js": ["popup.js"],
