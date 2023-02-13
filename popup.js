@@ -1,5 +1,5 @@
 async function fetchGraphQLData(query, variables={}) {
-    console.log('[leak] fetching lc details for query', query, 'with variables', variables)
+    console.log('[leetdeck] fetching lc details for query', query, 'with variables', variables)
     const response = await fetch('https://leetcode.com/graphql/', {
         method: 'POST',
         headers: {
@@ -27,14 +27,14 @@ const observer = new MutationObserver(function(mutations) {
             if (button.innerText == 'Submit') {
                 console.log('adding event to button', button.innerText);
                 button.addEventListener('click', function() {
-                    console.log("[leak] flashcard creation triggered");
+                    console.log("[leetdeck] flashcard creation triggered");
                     let front = '';
                     let back = '<br /><br /><code style="font-family: Jetbrains Mono, monospace; white-space: pre; background-color: #f6f8fa; padding: 10px; border-radius: 4px; overflow-x: auto;">';
 
                     // fetch slug
                     const url = window.location.href;
                     const slug = url.match(/\/problems\/(.*?)\//)[1];
-                    console.log('[leak] slug:', slug)
+                    console.log('[leetdeck] slug:', slug)
                     let v = {titleSlug: slug};
                     let desc_coro = fetchGraphQLData('\n    query questionContent($titleSlug: String!) {\n  question(titleSlug: $titleSlug) {\n    content\n  }\n}\n    ', v)
                     let lang = document.querySelector('.monaco-editor').parentElement.attributes['data-mode-id'].value;
@@ -59,8 +59,8 @@ const observer = new MutationObserver(function(mutations) {
                                     front += desc_data.question.content;
                                     back += code_data.syncedCode.code;
                                     back += '</code>'
-                                    console.log('[leak] front\n', front);
-                                    console.log('[leak] back\n', back);
+                                    console.log('[leetdeck] front\n', front);
+                                    console.log('[leetdeck] back\n', back);
                                     // send a message to the background script
                                     chrome.runtime.sendMessage({ type: 'submit-button-clicked' , payload: {"front": front, "back": back}});
                                 })

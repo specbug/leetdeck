@@ -1,5 +1,5 @@
 async function invoke(action, version, params={}) {
-  console.log('[leak] adding to anki', params);
+  console.log('[leetdeck] adding to anki', params);
   try {
     const response = await fetch('http://localhost:8765', {
       method: 'POST',
@@ -23,14 +23,14 @@ async function invoke(action, version, params={}) {
     }
     return json.result;
   } catch (e) {
-    console.error('[leak] failed to add to anki', e);
+    console.error('[leetdeck] failed to add to anki', e);
   }
 };
 
 
 async function addToAnki(data) {
     // Code to create flashcard in Anki
-    console.log("[leak] flashcard creation triggered");
+    console.log("[leetdeck] flashcard creation triggered");
     console.log('Received front\n', data.front);
     console.log('Received back\n', data.back);
     await invoke('addNote', 6, {
@@ -48,7 +48,7 @@ async function addToAnki(data) {
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
    if (request.type === 'submit-button-clicked') {
-       console.log('[leak] submit button event detected.')
+       console.log('[leetdeck] submit button event detected.')
        addToAnki(request.payload).then((result) => {
            console.log(result);
        }).catch((error) => {
@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
        });
    }
    else {
-       console.log('[leak] non-supported event received.', request.type)
+       console.log('[leetdeck] non-supported event received.', request.type)
    }
    return true;
 });
