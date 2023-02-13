@@ -11,7 +11,7 @@
   ],
   "content_scripts": [{
     "js": ["popup.js"],
-    "matches": ["http://*/*", "https://*/*"],
+    "matches": ["https://leetcode.com/*"],
     "run_at": "document_end"
   }],
   "host_permissions": [
