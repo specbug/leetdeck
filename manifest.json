@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "leak",
+  "name": "leetdeck",
   "version": "1.0",
   "description": "Leetcode 2 Anki extension.",
   "permissions": [
