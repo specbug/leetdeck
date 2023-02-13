@@ -11,7 +11,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      font-family: Arial, sans-serif;
+      font-family: "Warnock Pro", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
       font-size: 14px;
     }
 
@@ -26,9 +26,9 @@
 
     h1 {
       margin: 0;
-      font-size: 18px;
+      font-size: 22px;
+      font-family: "Palatino";
       font-weight: bold;
-      color: salmon;
     }
 
     .logo-container {
@@ -45,14 +45,14 @@
     }
 
     .logo.leetcode {
-      background-image: url('https://cdn.iconscout.com/icon/free/png-256/leetcode-3521542-2944960.png');
+      background-image: url('leetcode.svg');
       background-size: contain;
       background-repeat: no-repeat;
 
     }
 
     .logo.anki {
-      background-image: url('https://dl2.macupdate.com/images/icons256/33599.png?time=1671219144');
+      background-image: url("anki_logo.svg");
       background-size: contain;
       background-repeat: no-repeat;
 
@@ -63,8 +63,8 @@
       height: 0;
       border-style: solid;
       border-width: 12px 0 12px 12px;
-      border-color: transparent transparent transparent salmon;
-      margin: 0 10px;
+      border-color: transparent transparent transparent #ff796c;
+      margin: 0px 10px 0px 10px;
     }
 
     p {
@@ -78,7 +78,7 @@
       display: block;
       width: 100%;
       padding: 10px;
-      background-color: salmon;
+      background-color: #ff796c;
       color: #fff;
       border: none;
       border-radius: 5px;
@@ -92,7 +92,7 @@
 
 <body>
   <div class="container">
-    <h1>leak</h1>
+    <h1>leetdeck</h1>
     <div class="logo-container">
       <div class="logo leetcode">
       </div>
@@ -100,11 +100,10 @@
       <div class="logo anki"></div>
     </div>
     <p>
-      Aced an LC problem? Don't forget it, just hit
-      <strong>Submit</strong> to convert it to an Anki flashcard!
+      Nailed an LC challenge? Now remember it forever! <code>Submit</code> the solution to create an Anki flashcard.
     </p>
     <a href="https://github.com/specbug/leak" target="_blank">
-      <img class="logo" src="./github_logo.png" />
+      <img height="16" width="16" src="./github-mark.svg" />
     </a>
   </div>
 </body>
