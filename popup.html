@@ -1,72 +1,110 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <style>
-      body {
-        background-color: white;
-        font-family: "Warnock Pro", Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
-        color: black;
-        width: 300px;
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-      }
 
-      .title-bar {
-        background-color: #ff796c;
-        padding: 20px;
-        text-align: center;
-        width: 100%;
-      }
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
 
-      .title-bar h1 {
-        margin: 0;
-        color: white;
-        font-size: 24px;
-        margin-bottom: 10px;
-      }
+    .container {
+      width: 400px;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
 
-      .content {
-        padding: 20px;
-        text-align: center;
-        width: 100%;
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+      color: salmon;
+    }
 
-      .content p {
-        font-size: 18px;
-        margin-bottom: 20px;
-      }
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
 
-      .content a {
-        text-decoration: none;
-      }
 
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
+    .logo {
+      width: 50px;
+      height: 50px;
+    }
 
-      img {
-        margin-top: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="title-bar">
-      <a href="https://github.com/specbug/leak" target="_blank"><h1>leak</h1></a>
-      <small style="color: ghostwhite; opacity: 90%;">Leetcode 2 Anki</small>
+    .logo.leetcode {
+      background-image: url('https://cdn.iconscout.com/icon/free/png-256/leetcode-3521542-2944960.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+
+    }
+
+    .logo.anki {
+      background-image: url('https://dl2.macupdate.com/images/icons256/33599.png?time=1671219144');
+      background-size: contain;
+      background-repeat: no-repeat;
+
+    }
+
+    .arrow {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 12px 0 12px 12px;
+      border-color: transparent transparent transparent salmon;
+      margin: 0 10px;
+    }
+
+    p {
+      margin: 20px 0;
+      font-size: 14px;
+      color: #333;
+      text-align: center;
+    }
+
+    .submit-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: salmon;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>leak</h1>
+    <div class="logo-container">
+      <div class="logo leetcode" src="./leetCode_logo.png">
+      </div>
+      <div class="arrow"></div>
+      <div class="logo anki" src="./anki_logo.png"></div>
     </div>
-    <div class="content">
-      <p>Aced an LC problem? Don't forget it, just hit <strong>Submit</strong> to convert it to an Anki flashcard!</p>
-      <a href="https://github.com/specbug/leak" target="_blank">
-        <img height="32" width="32" src="./github-mark.svg" alt="Github">
-      </a>
-    </div>
-  </body>
+    <p>
+      Aced an LC problem? Don't forget it, just hit
+      <strong>Submit</strong> to convert it to an Anki flashcard!
+    </p>
+    <a class="submit-button" href="https://github.com/specbug/leak" target="_blank">Submit</a>
+  </div>
+</body>
+
 </html>
