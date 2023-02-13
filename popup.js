@@ -1,3 +1,4 @@
+var _BFL = true;
 async function fetchGraphQLData(query, variables={}) {
     console.log('[leetdeck] fetching lc details for query', query, 'with variables', variables)
     const response = await fetch('https://leetcode.com/graphql/', {
@@ -16,15 +17,14 @@ async function fetchGraphQLData(query, variables={}) {
     return res.data;
 }
 
-
-
 const observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
         const buttons = document.querySelectorAll('button');
         if (buttons.length) {
           observer.disconnect();
           buttons.forEach(function(button) {
-            if (button.innerText == 'Submit') {
+            if (button.innerText == 'Submit' && _BFL) {
+                _BFL = false;
                 console.log('adding event to button', button.innerText);
                 button.addEventListener('click', function() {
                     console.log("[leetdeck] flashcard creation triggered");
@@ -76,7 +76,9 @@ const observer = new MutationObserver(function(mutations) {
         }});
 });
 
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
+window.addEventListener('load', function () {
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 });
