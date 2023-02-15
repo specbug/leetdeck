@@ -33,7 +33,7 @@ async function addToAnki(data) {
     console.log("[leetdeck] flashcard creation triggered");
     console.log('Received front\n', data.front);
     console.log('Received back\n', data.back);
-    await invoke('addNote', 6, {
+    await invoke('guiAddCards', 6, {
       "note": {
         "deckName": "One Deck To Rule Them All",
         "modelName": "Basic",
