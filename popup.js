@@ -1,4 +1,6 @@
+const successCode = 10;
 var _BFL = true;
+
 async function fetchGraphQLData(query, variables={}) {
     console.log('[leetdeck] fetching lc details for query', query, 'with variables', variables)
     const response = await fetch('https://leetcode.com/graphql/', {
@@ -13,8 +15,22 @@ async function fetchGraphQLData(query, variables={}) {
         }),
     });
     let res = await response.json();
-    console.log('query', query, 'responded with', res.data);
+    console.log('[leetdeck] query', query, 'responded with', res.data);
     return res.data;
+}
+
+async function checkUrl(regex) {
+  const startTime = new Date().getTime();
+  console.log('[leetdeck] monitoring URL change to submission tab with regex', regex);
+  while (new Date().getTime() - startTime <= 40000) {
+    const url = window.location.href;
+    if (regex.test(url)) {
+        console.log('[leetdeck] matched submission url', url);
+      return url;
+    }
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+  throw new Error('[leetdeck] Timed out waiting for URL to match pattern.');
 }
 
 const observer = new MutationObserver(function(mutations) {
@@ -25,7 +41,7 @@ const observer = new MutationObserver(function(mutations) {
           buttons.forEach(function(button) {
             if (button.innerText == 'Submit' && _BFL) {
                 _BFL = false;
-                console.log('adding event to button', button.innerText);
+                console.log('[leetdeck] adding event to button', button.innerText);
                 button.addEventListener('click', function() {
                     console.log("[leetdeck] flashcard creation triggered");
                     let front = '';
@@ -62,7 +78,26 @@ const observer = new MutationObserver(function(mutations) {
                                     console.log('[leetdeck] front\n', front);
                                     console.log('[leetdeck] back\n', back);
                                     // send a message to the background script
-                                    chrome.runtime.sendMessage({ type: 'submit-button-clicked' , payload: {"front": front, "back": back}});
+                                    const regex = new RegExp(`^https://leetcode\\.com/problems/${slug}/submissions/\\d+`);
+                                    checkUrl(regex)
+                                        .then((url) => {
+                                            let submissionId = parseInt(url.match(/\/submissions\/(.*?)\//)[1]);
+                                            console.log('[leetdeck] submission ID:', submissionId);
+                                            fetchGraphQLData('\n    query submissionDetails($submissionId: Int!) {\n  submissionDetails(submissionId: $submissionId) {\n    statusCode\n  }\n}\n    ', {'submissionId': submissionId})
+                                                .then((res) => {
+                                                    let statusCode = parseInt(res.submissionDetails.statusCode);
+                                                    if (statusCode != successCode) {
+                                                        console.warn('[leetdeck] non-ac submission; card not added, recv status code:', statusCode);
+                                                    }
+                                                    else {
+                                                        console.log('[leetdeck] submission success! generating Anki flashcard..')
+                                                        chrome.runtime.sendMessage({ type: 'submit-button-clicked' , payload: {"front": front, "back": back}});
+                                                    }
+                                                });
+                                        })
+                                        .catch((error) => {
+                                            console.error(error);
+                                        });
                                 })
                                 .catch((error) => {
                                     console.error(error);
